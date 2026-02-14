@@ -7,36 +7,15 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         body { background-color: #000; color: #fff; font-family: 'Montserrat', sans-serif; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 90vh; margin: 0; }
-        
         .container { width: 100%; max-width: 400px; text-align: center; }
-        
         h1 { color: #00ff00; text-transform: uppercase; margin-bottom: 30px; font-size: 2rem; }
-        
         label { display: block; text-align: left; margin-bottom: 5px; color: #666; font-size: 0.9rem; margin-top: 15px; }
-        
-        select, input {
-            width: 100%; padding: 15px; font-size: 1.2rem;
-            background: #111; border: 2px solid #333; color: #fff;
-            border-radius: 8px; box-sizing: border-box; font-family: 'Montserrat', sans-serif; font-weight: 700;
-            outline: none; transition: 0.3s;
-        }
-        
+        select, input { width: 100%; padding: 15px; font-size: 1.2rem; background: #111; border: 2px solid #333; color: #fff; border-radius: 8px; box-sizing: border-box; font-family: 'Montserrat', sans-serif; font-weight: 700; outline: none; transition: 0.3s; }
         select:focus, input:focus { border-color: #00ff00; }
-        
-        button {
-            width: 100%; padding: 20px; font-size: 1.5rem;
-            background: #00ff00; color: #000; border: none;
-            border-radius: 8px; font-weight: 900; margin-top: 30px;
-            cursor: pointer; text-transform: uppercase;
-        }
+        button { width: 100%; padding: 20px; font-size: 1.5rem; background: #00ff00; color: #000; border: none; border-radius: 8px; font-weight: 900; margin-top: 30px; cursor: pointer; text-transform: uppercase; }
         button:active { transform: scale(0.98); }
-        button:disabled { background: #333; color: #666; }
-
-        .feedback { margin-top: 20px; font-size: 1rem; height: 20px; color: #00ff00; }
-        
-        /* Checkbox para lembrar nome */
-        .remember-box { display: flex; align-items: center; margin-top: 10px; font-size: 0.8rem; color: #888; }
-        .remember-box input { width: auto; margin-right: 10px; }
+        button:disabled { background: #333; color: #666; cursor: not-allowed; }
+        .feedback { margin-top: 20px; font-size: 1rem; min-height: 20px; color: #00ff00; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -47,10 +26,10 @@
         <label>QUEM VENDEU?</label>
         <select id="vendedor">
             <option value="" disabled selected>Selecione seu nome...</option>
-            </select>
+        </select>
         
         <label>QUAL O VALOR?</label>
-        <input type="number" id="valor" placeholder="R$ 0,00" step="0.01">
+        <input type="number" id="valor" placeholder="R$ 0,00" step="0.01" inputmode="decimal">
 
         <button id="btn-enviar" onclick="enviarVenda()">LANÇAR</button>
         
@@ -59,12 +38,11 @@
 
 <script>
     // ==========================================
-    // COLE A URL DO SCRIPT AQUI:
+    // ⚠️ COLE A URL DO PASSO 1 AQUI:
     // ==========================================
-    const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbwoaUIVKQA2u7PO25bk-BuCMezRuwd2dwNH51XvIV6EXAxETWMYXzS_A0gzDT8Ur2iF/exec"; 
+    const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbxJYIW3wIg2n6hlAFMod_dulSy5e3pIGbV30csoWirY2oqpRDhDUhPUUwO0BauCciuI/exec"; 
     // ==========================================
 
-    // LISTA DE VENDEDORES (Tem que ser IGUAL ao do Ranking)
     const vendedores = [
         "ADRIANA VITORELLI", "CLAUDIA LIZ", "PATRICIA", "GRACIELE", "LUAN",
         "RODRIGO", "BEATRIZ", "GEOVANNA", "CAROLINE", "DIENE",
@@ -72,62 +50,57 @@
         "GISELI", "CAMILA INGRA", "Vendedor 18", "Vendedor 19", "Vendedor 20"
     ];
 
-    // 1. Preenche o Dropdown e recupera nome salvo
     window.onload = function() {
         const select = document.getElementById('vendedor');
-        
-        // Cria as opções
         vendedores.forEach(nome => {
             const opt = document.createElement('option');
             opt.value = nome;
             opt.innerText = nome;
             select.appendChild(opt);
         });
-
-        // Tenta pegar o nome salvo na memória do celular
         const salvo = localStorage.getItem('vendedor_salvo');
-        if (salvo) {
-            select.value = salvo;
-        }
+        if (salvo) select.value = salvo;
     };
 
     function enviarVenda() {
         const vendedor = document.getElementById('vendedor').value;
-        const valor = document.getElementById('valor').value;
+        const valorInput = document.getElementById('valor').value;
         const btn = document.getElementById('btn-enviar');
         const msg = document.getElementById('msg');
 
-        if (!vendedor || !valor) {
+        if (!vendedor || !valorInput) {
             msg.style.color = 'red';
             msg.innerText = "Preencha todos os campos!";
             return;
         }
 
-        // SALVA O NOME NA MEMÓRIA (TRAVA O NOME)
         localStorage.setItem('vendedor_salvo', vendedor);
 
-        // Bloqueia botão
         btn.disabled = true;
         btn.innerText = "ENVIANDO...";
         msg.innerText = "";
 
-        // Envia para o Google Sheets
-       // No seu HTML de Lançamento, substitua a parte do fetch por esta:
-fetch(URL_SCRIPT, {
-    method: 'POST',
-    mode: 'no-cors', // Mantido para evitar erro de redirecionamento do Google
-    cache: 'no-cache',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ 
-        vendedor: vendedor, 
-        valor: valor.replace(',', '.') // Garante que vai ponto decimal para o Script
-    })
+        // Prepara o objeto para envio
+        const dados = {
+            vendedor: vendedor,
+            valor: valorInput
+        };
+
+        fetch(URL_SCRIPT, {
+            method: 'POST',
+            mode: 'no-cors', 
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(dados)
+        }).then(() => {
+            msg.style.color = '#00ff00';
+            msg.innerText = "VENDA LANÇADA! 💸";
+            document.getElementById('valor').value = ""; 
             
             setTimeout(() => {
                 btn.disabled = false;
                 btn.innerText = "LANÇAR";
                 msg.innerText = "";
-            }, 2000);
+            }, 2500);
             
         }).catch(err => {
             msg.style.color = 'red';
@@ -138,12 +111,5 @@ fetch(URL_SCRIPT, {
         });
     }
 </script>
-
 </body>
-
 </html>
-
-
-
-
-
