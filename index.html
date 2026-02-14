@@ -112,16 +112,16 @@
         msg.innerText = "";
 
         // Envia para o Google Sheets
-        fetch(URL_SCRIPT, {
-            method: 'POST',
-            mode: 'no-cors', // Importante para scripts simples
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ vendedor: vendedor, valor: valor })
-        }).then(() => {
-            // Sucesso (Como usamos no-cors, assumimos sucesso se não der erro de rede)
-            msg.style.color = '#00ff00';
-            msg.innerText = "VENDA LANÇADA COM SUCESSO!";
-            document.getElementById('valor').value = ""; // Limpa só o valor
+       // No seu HTML de Lançamento, substitua a parte do fetch por esta:
+fetch(URL_SCRIPT, {
+    method: 'POST',
+    mode: 'no-cors', // Mantido para evitar erro de redirecionamento do Google
+    cache: 'no-cache',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ 
+        vendedor: vendedor, 
+        valor: valor.replace(',', '.') // Garante que vai ponto decimal para o Script
+    })
             
             setTimeout(() => {
                 btn.disabled = false;
@@ -142,6 +142,7 @@
 </body>
 
 </html>
+
 
 
 
