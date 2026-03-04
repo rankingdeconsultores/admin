@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>LANÇAR VENDA</title>
+    
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🤑</text></svg>">
+    
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         body { background-color: #000; color: #fff; font-family: 'Montserrat', sans-serif; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 90vh; margin: 0; }
@@ -37,17 +40,15 @@
     </div>
 
 <script>
-    // ==========================================
-    // ⚠️ COLE A URL DO PASSO 1 AQUI:
-    // ==========================================
+    // URL DO SEU GOOGLE SCRIPT (MANTENHA A SUA URL AQUI)
     const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbxJYIW3wIg2n6hlAFMod_dulSy5e3pIGbV30csoWirY2oqpRDhDUhPUUwO0BauCciuI/exec"; 
-    // ==========================================
 
+    // Lista atualizada de vendedores
     const vendedores = [
         "ADRIANA VITORELLI", "CLAUDIA LIZ", "PATRICIA", "GRACIELE", "LUAN",
         "RODRIGO", "BEATRIZ", "GEOVANNA", "CAROLINE", "DIENE",
         "BIANCA", "VIVIANE", "GABRIELLY", "RYANE", "SUELI",
-        "GISELI", "CAMILA INGRA", "Vendedor 18", "Vendedor 19", "Vendedor 20"
+        "GISELI", "CAMILA INGRA"
     ];
 
     window.onload = function() {
@@ -80,7 +81,6 @@
         btn.innerText = "ENVIANDO...";
         msg.innerText = "";
 
-        // Prepara o objeto para envio
         const dados = {
             vendedor: vendedor,
             valor: valorInput
